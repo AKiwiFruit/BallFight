@@ -6,6 +6,8 @@ import math
 pygame.init()
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+pygame.display.set_caption("Ball Fight Simulator")
+clock = pygame.time.Clock()
 
 Playing = True
 while Playing:
@@ -26,6 +28,9 @@ while Playing:
 
     # Update display
     pygame.display.update()
+
+    # Cap the frame rate
+    clock.tick(60)
 
 
 
