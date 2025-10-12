@@ -2,40 +2,64 @@ import pygame
 import random
 import math
 
-# Initialize Pygame 
-pygame.init()
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-pygame.display.set_caption("Ball Fight Simulator")
-clock = pygame.time.Clock()
 
-Playing = True
-while Playing:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            Playing = False
-            break
-        elif event.type == pygame.VIDEORESIZE:
-            # If window is resized, update the screen dimensions
-            WIDTH, HEIGHT = event.w, event.h
-            screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-    
-    screen.fill((145, 63, 146))  # Clear screen with purple background
+class BallGame():
+    def __init__(self):
+        ''' 
+        Initialize the game 
+        Resizable window, 800x600 default size
+        '''
+        pygame.init()
+        self.WIDTH, self.HEIGHT = 800, 600
+        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.RESIZABLE)
+        pygame.display.set_caption("Ball Fight Simulator")
+        self.clock = pygame.time.Clock()
+        self.Playing = True
 
-    # Draw Arena
-    pygame.draw.rect(screen, (0, 0, 0), (100, 100, WIDTH-200, HEIGHT-250), 5)
-    pygame.draw.rect(screen, (255, 255, 255), (105, 105, WIDTH-210, HEIGHT-260), 0)
+    def processEvents(self):
+        ''' 
+         Process events
+         - Quit - Resize -
+        '''
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.Playing = False
+                break
+            elif event.type == pygame.VIDEORESIZE:
+                # If window is resized, update the screen dimensions
+                self.WIDTH, self.HEIGHT = event.w, event.h
+                self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.RESIZABLE)
 
-    # Update display
-    pygame.display.update()
+    def update(self):
+        '''
+        Update game state
+        '''
+        pass
 
-    # Cap the frame rate
-    clock.tick(60)
+    def render(self):
+        '''
+        Render game visuals
+        '''
+        self.screen.fill((145, 63, 146))  # Clear screen with purple background
+
+        # Draw Arena
+        pygame.draw.rect(self.screen, (0, 0, 0), (100, 100, self.WIDTH-200, self.HEIGHT-250), 5)
+        pygame.draw.rect(self.screen, (255, 255, 255), (105, 105, self.WIDTH-210, self.HEIGHT-260), 0)
+
+        # Update display
+        pygame.display.update()
 
 
+    def run(self):
+        '''
+        Main game loop
+        '''
+        while self.Playing:
+            self.processEvents()
+            self.update()
+            self.render()
+            # Cap the frame rate
+            self.clock.tick(60)
 
-
-
-
-# Final exit of application
-pygame.quit()
+game = BallGame()
+game.run()
