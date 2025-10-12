@@ -3,16 +3,16 @@ import random
 from pygame.math import Vector2
 
 
-class BallGame():
+class CreateSettings():
     def __init__(self):
         ''' 
-        Initialize the game 
-        Resizable window, 800x600 default size
+        Initialize the settings creation window/instance 
+        800x600 default size
         '''
         pygame.init()
         self.screenDim = Vector2(800, 600)
-        self.screen = pygame.display.set_mode((self.screenDim.x, self.screenDim.y), pygame.RESIZABLE)
-        pygame.display.set_caption("Ball Fight Simulator")
+        self.screen = pygame.display.set_mode((self.screenDim.x, self.screenDim.y))
+        pygame.display.set_caption("Ball Fight Simulator (Creation Mode)")
         self.clock = pygame.time.Clock()
         self.Playing = True
 
@@ -32,19 +32,25 @@ class BallGame():
 
     def update(self):
         '''
-        Update game state
+        Update state
         '''
         pass
 
     def render(self):
         '''
-        Render game visuals
+        Render creation menu visuals
         '''
-        self.screen.fill((145, 63, 146))  # Clear screen with purple background
+        self.screen.fill((41, 189, 193))  # Tealish background
 
-        # Draw Arena
-        pygame.draw.rect(self.screen, (0, 0, 0), (100, 100, self.screenDim.x-200, self.screenDim.y-250), 5)
-        pygame.draw.rect(self.screen, (255, 255, 255), (105, 105, self.screenDim.x-210, self.screenDim.y-260), 0)
+        # Draw Preview Boxes
+        pygame.draw.rect(self.screen, (0, 0, 0), (50, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
+        pygame.draw.rect(self.screen, (255, 255, 255), (55, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
+
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
+        pygame.draw.rect(self.screen, (255, 255, 255), (self.screenDim.x-345, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
+
+        # Draw Settings Selection Boxes
+        #TODO
 
         # Update display
         pygame.display.update()
@@ -52,7 +58,7 @@ class BallGame():
 
     def run(self):
         '''
-        Main game loop
+        Main loop
         '''
         while self.Playing:
             self.processEvents()
@@ -61,5 +67,5 @@ class BallGame():
             # Cap the frame rate
             self.clock.tick(60)
 
-game = BallGame()
-game.run()
+creation = CreateSettings()
+creation.run()
