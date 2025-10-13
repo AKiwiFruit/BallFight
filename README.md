@@ -1,7 +1,7 @@
 ## 2D Ball Fight Animation Creation Software 
-Inspired by similar such programs online
+Inspired by ball fighting videos online (see earclacks)
 
 Includes a variety of ball shaped characters with weapons 
 who battle it out in the arena. Uses PyGame.
 
-For fun project by: Kiyan Bates
+For fun project - Kiyan Bates
