@@ -2,14 +2,21 @@ import pygame
 from pygame.math import Vector2
 
 class BallFighter():
-    def __init__(self, position, velocity, color, radius):
+    def __init__(self, position, velocity, image, spin, radius, color):
         self.position = Vector2(position)
         self.velocity = Vector2(velocity)
-        self.color = color
+        self.image = image
+        self.spin = spin
         self.radius = radius
+        self.color = color
 
     def move(self):
         self.position += self.velocity
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (int(self.position.x), int(self.position.y)), self.radius)
+
+class SwordFighter(BallFighter):
+    def __init__(self, position, velocity):
+        super().__init__(position, velocity, "Sprites/Sword.png", spin=5, radius=20, color=(205, 50, 50))
+

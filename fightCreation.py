@@ -1,7 +1,7 @@
 import pygame
 import random
 from pygame.math import Vector2
-from ballFighters import BallFighter
+import ballFighters
 import ballSimGame
 
 
@@ -18,6 +18,13 @@ class CreateSettings():
         self.clock = pygame.time.Clock()
         self.Playing = True
 
+        # Load default images for preview boxes
+        self.image1 = pygame.image.load("assets/Blank.png").convert_alpha()
+        self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-510, self.screenDim.y-360))
+
+        self.image2 = pygame.image.load("assets/Blank.png").convert_alpha()
+        self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-510, self.screenDim.y-360))
+
     def processEvents(self):
         ''' 
          Process events
@@ -31,6 +38,15 @@ class CreateSettings():
                 # If window is resized, update the screen dimensions
                 self.screenDim = Vector2(event.w, event.h)
                 self.screen = pygame.display.set_mode((self.screenDim.x, self.screenDim.y), pygame.RESIZABLE)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left click
+                    mouse_pos = Vector2(event.pos)
+                    # Check for selection boxes being clicked to select character
+                    match mouse_pos:
+                        case _ if 50 <= mouse_pos.x <= 100 and self.screenDim.x-450 <= mouse_pos.y <= self.screenDim.x-400:
+                            # First Ball - Sword
+                            self.image1 = pygame.image.load("assets/Sword.png").convert_alpha()
+                            self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
 
     def update(self):
         '''
@@ -46,10 +62,12 @@ class CreateSettings():
 
         # Draw Preview Boxes
         pygame.draw.rect(self.screen, (0, 0, 0), (50, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
-        pygame.draw.rect(self.screen, (255, 255, 255), (55, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
+        display1 = pygame.draw.rect(self.screen, (255, 255, 255), (55, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
+        self.screen.blit(self.image1, display1)
 
         pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
-        pygame.draw.rect(self.screen, (255, 255, 255), (self.screenDim.x-345, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
+        display2 = pygame.draw.rect(self.screen, (255, 255, 255), (self.screenDim.x-345, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
+        self.screen.blit(self.image2, display2)
 
         # Draw Settings Selection Boxes
         ## First Ball
