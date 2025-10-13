@@ -1,6 +1,8 @@
 import pygame
 import random
 from pygame.math import Vector2
+from ballFighters import BallFighter
+import ballSimGame
 
 
 class CreateSettings():
@@ -50,7 +52,23 @@ class CreateSettings():
         pygame.draw.rect(self.screen, (255, 255, 255), (self.screenDim.x-345, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
 
         # Draw Settings Selection Boxes
-        #TODO
+        ## First Ball
+        ### Sword
+        pygame.draw.rect(self.screen, (0, 0, 0), (50, self.screenDim.x-450, 50, 50), 5)
+        pygame.draw.rect(self.screen, (145, 35, 65), (55, self.screenDim.x-445, 40, 40), 0)
+
+        ### Dagger
+        pygame.draw.rect(self.screen, (0, 0, 0), (125, self.screenDim.x-450, 50, 50), 5)
+        pygame.draw.rect(self.screen, (85, 135, 65), (130, self.screenDim.x-445, 40, 40), 0)       
+
+        ## Second Ball
+        ### Sword
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, self.screenDim.x-450, 50, 50), 5)
+        pygame.draw.rect(self.screen, (145, 35, 65), (self.screenDim.x-345, self.screenDim.x-445, 40, 40), 0)
+
+        ### Dagger
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-275, self.screenDim.x-450, 50, 50), 5)
+        pygame.draw.rect(self.screen, (85, 135, 65), (self.screenDim.x-270, self.screenDim.x-445, 40, 40), 0)
 
         # Update display
         pygame.display.update()
