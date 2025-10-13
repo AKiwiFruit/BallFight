@@ -25,6 +25,10 @@ class CreateSettings():
         self.image2 = pygame.image.load("assets/Blank.png").convert_alpha()
         self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-510, self.screenDim.y-360))
 
+        # Character selections
+        self.char1 = None
+        self.char2 = None
+
     def processEvents(self):
         ''' 
          Process events
@@ -46,18 +50,23 @@ class CreateSettings():
                         # First Ball - Sword
                         self.image1 = pygame.image.load("assets/Sword.png").convert_alpha()
                         self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
+                        self.char1 = ballFighters.SwordFighter()
                     elif 125 <= mouse_pos.x <= 175 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
                         # First Ball - Dagger
                         self.image1 = pygame.image.load("assets/Dagger.png").convert_alpha()
                         self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
+                        self.char1 = ballFighters.DaggerFighter()
                     elif self.screenDim.x-350 <= mouse_pos.x <= self.screenDim.x-300 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
                         # First Ball - Sword
                         self.image2 = pygame.image.load("assets/Sword.png").convert_alpha()
                         self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
+                        self.char2 = ballFighters.SwordFighter()
                     elif self.screenDim.x-275 <= mouse_pos.x <= self.screenDim.x-225 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
                         # First Ball - Dagger
                         self.image2 = pygame.image.load("assets/Dagger.png").convert_alpha()
                         self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
+                        self.char2 = ballFighters.DaggerFighter()
+                    # Add more selections as needed
                         
 
     def update(self):
@@ -103,6 +112,11 @@ class CreateSettings():
         # Update display
         pygame.display.update()
 
+    def getCharacters(self):
+        '''
+        Return the selected character classes
+        '''
+        return self.char1, self.char2
 
     def run(self):
         '''
@@ -115,5 +129,12 @@ class CreateSettings():
             # Cap the frame rate
             self.clock.tick(60)
 
+
 creation = CreateSettings()
 creation.run()
+character1, character2 = creation.getCharacters()
+
+print(character1, character2)
+#if character1 is not None and character2 is not None:
+    #game = ballSimGame.BallSimGame(character1, character2)
+    #game.run()
