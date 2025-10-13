@@ -42,11 +42,23 @@ class CreateSettings():
                 if event.button == 1:  # Left click
                     mouse_pos = Vector2(event.pos)
                     # Check for selection boxes being clicked to select character
-                    match mouse_pos:
-                        case _ if 50 <= mouse_pos.x <= 100 and self.screenDim.x-450 <= mouse_pos.y <= self.screenDim.x-400:
-                            # First Ball - Sword
-                            self.image1 = pygame.image.load("assets/Sword.png").convert_alpha()
-                            self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
+                    if 50 <= mouse_pos.x <= 100 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
+                        # First Ball - Sword
+                        self.image1 = pygame.image.load("assets/Sword.png").convert_alpha()
+                        self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
+                    elif 125 <= mouse_pos.x <= 175 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
+                        # First Ball - Dagger
+                        self.image1 = pygame.image.load("assets/Dagger.png").convert_alpha()
+                        self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
+                    elif self.screenDim.x-350 <= mouse_pos.x <= self.screenDim.x-300 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
+                        # First Ball - Sword
+                        self.image2 = pygame.image.load("assets/Sword.png").convert_alpha()
+                        self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
+                    elif self.screenDim.x-275 <= mouse_pos.x <= self.screenDim.x-225 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
+                        # First Ball - Dagger
+                        self.image2 = pygame.image.load("assets/Dagger.png").convert_alpha()
+                        self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
+                        
 
     def update(self):
         '''
@@ -58,7 +70,7 @@ class CreateSettings():
         '''
         Render creation menu visuals
         '''
-        self.screen.fill((41, 189, 193))  # Tealish background
+        self.screen.fill((42, 40, 40))  # dark grey background
 
         # Draw Preview Boxes
         pygame.draw.rect(self.screen, (0, 0, 0), (50, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
@@ -72,21 +84,21 @@ class CreateSettings():
         # Draw Settings Selection Boxes
         ## First Ball
         ### Sword
-        pygame.draw.rect(self.screen, (0, 0, 0), (50, self.screenDim.x-450, 50, 50), 5)
-        pygame.draw.rect(self.screen, (145, 35, 65), (55, self.screenDim.x-445, 40, 40), 0)
+        pygame.draw.rect(self.screen, (0, 0, 0), (50, self.screenDim.y-250, 50, 50), 5)
+        pygame.draw.rect(self.screen, (145, 35, 65), (55, self.screenDim.y-245, 40, 40), 0)
 
         ### Dagger
-        pygame.draw.rect(self.screen, (0, 0, 0), (125, self.screenDim.x-450, 50, 50), 5)
-        pygame.draw.rect(self.screen, (85, 135, 65), (130, self.screenDim.x-445, 40, 40), 0)       
+        pygame.draw.rect(self.screen, (0, 0, 0), (125, self.screenDim.y-250, 50, 50), 5)
+        pygame.draw.rect(self.screen, (85, 135, 65), (130, self.screenDim.y-245, 40, 40), 0)       
 
         ## Second Ball
         ### Sword
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, self.screenDim.x-450, 50, 50), 5)
-        pygame.draw.rect(self.screen, (145, 35, 65), (self.screenDim.x-345, self.screenDim.x-445, 40, 40), 0)
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, self.screenDim.y-250, 50, 50), 5)
+        pygame.draw.rect(self.screen, (145, 35, 65), (self.screenDim.x-345, self.screenDim.y-245, 40, 40), 0)
 
         ### Dagger
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-275, self.screenDim.x-450, 50, 50), 5)
-        pygame.draw.rect(self.screen, (85, 135, 65), (self.screenDim.x-270, self.screenDim.x-445, 40, 40), 0)
+        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-275, self.screenDim.y-250, 50, 50), 5)
+        pygame.draw.rect(self.screen, (85, 135, 65), (self.screenDim.x-270, self.screenDim.y-245, 40, 40), 0)
 
         # Update display
         pygame.display.update()
