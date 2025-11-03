@@ -2,6 +2,8 @@
 Inspired by ball fighting videos online (see earclacks)
 
 Includes a variety of ball shaped characters with weapons 
-who battle it out in the arena. Uses PyGame.
+who battle it out in the arena. Uses PyGame. Sprites made by me.
 
 For fun project - Kiyan Bates
+
+--Unfinished--
