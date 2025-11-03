@@ -49,6 +49,11 @@ class BallGame():
         pygame.draw.rect(self.screen, (0, 0, 0), (100, 100, self.screenDim.x-200, self.screenDim.y-250), 5)
         pygame.draw.rect(self.screen, (255, 255, 255), (105, 105, self.screenDim.x-210, self.screenDim.y-260), 0)
 
+        # Draw Balls
+        self.character1.draw(self.screen)
+
+        self.character2.draw(self.screen)
+
         # Update display
         pygame.display.update()
 

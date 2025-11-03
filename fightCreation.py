@@ -50,26 +50,27 @@ class CreateSettings():
                         # First Ball - Sword
                         self.image1 = pygame.image.load("assets/Sword.png").convert_alpha()
                         self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char1 = ballFighters.SwordFighter()
+                        self.char1 = ballFighters.SwordFighter(Vector2(350,300))
                     elif 125 <= mouse_pos.x <= 175 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
                         # First Ball - Dagger
                         self.image1 = pygame.image.load("assets/Dagger.png").convert_alpha()
                         self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char1 = ballFighters.DaggerFighter()
+                        self.char1 = ballFighters.DaggerFighter(Vector2(350,300))
                     elif self.screenDim.x-350 <= mouse_pos.x <= self.screenDim.x-300 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
                         # First Ball - Sword
                         self.image2 = pygame.image.load("assets/Sword.png").convert_alpha()
                         self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char2 = ballFighters.SwordFighter()
+                        self.char2 = ballFighters.SwordFighter(Vector2(450,300))
                     elif self.screenDim.x-275 <= mouse_pos.x <= self.screenDim.x-225 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
                         # First Ball - Dagger
                         self.image2 = pygame.image.load("assets/Dagger.png").convert_alpha()
                         self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char2 = ballFighters.DaggerFighter()
+                        self.char2 = ballFighters.DaggerFighter(Vector2(450,300))
                     # Add more selections as needed
                     # Start Button clicked
                     elif (self.screenDim.x/2-75 <= mouse_pos.x <= self.screenDim.x/2+75 and
                           self.screenDim.y-100 <= mouse_pos.y <= self.screenDim.y-50):
+                        
                         character1, character2 = creation.getCharacters()
 
                         print(character1, character2)
