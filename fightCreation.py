@@ -47,21 +47,20 @@ class CreateSettings():
                     mouse_pos = Vector2(event.pos)
                     # Check for selection boxes being clicked to select character
                     ballsList = [ballFighters.SwordFighter, ballFighters.DaggerFighter, ballFighters.Brawler]
+                    imageList = ["assets/Sword.png", "assets/Dagger.png", "assets/Brawler.png"]
                     # First Ball selections
                     for i in range(3):
                         if 50+75*i <= mouse_pos.x <= 100+75*i and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
-                            ball = ballsList[i](Vector2(350,300))
-                            self.image1 = pygame.image.load(ball.image).convert_alpha()
+                            self.image1 = pygame.image.load(imageList[i]).convert_alpha()
                             self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
-                            self.char1 = ball
+                            self.char1 = ballsList[i](Vector2(350,300))
 
                     # Second Ball selections
                     for i in range(3):
                         if self.screenDim.x-350+75*i <= mouse_pos.x <= self.screenDim.x-300+75*i and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
-                            ball = ballsList[i](Vector2(450,300))
-                            self.image2 = pygame.image.load(ball.image).convert_alpha()
+                            self.image2 = pygame.image.load(imageList[i]).convert_alpha()
                             self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
-                            self.char2 = ball
+                            self.char2 = ballsList[i](Vector2(450,300))
                     # Add more selections as needed
 
                     # Start Button clicked
