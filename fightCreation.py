@@ -46,29 +46,26 @@ class CreateSettings():
                 if event.button == 1:  # Left click
                     mouse_pos = Vector2(event.pos)
                     # Check for selection boxes being clicked to select character
-                    if 50 <= mouse_pos.x <= 100 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
-                        # First Ball - Sword
-                        self.image1 = pygame.image.load("assets/Sword.png").convert_alpha()
-                        self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char1 = ballFighters.SwordFighter(Vector2(350,300))
-                    elif 125 <= mouse_pos.x <= 175 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
-                        # First Ball - Dagger
-                        self.image1 = pygame.image.load("assets/Dagger.png").convert_alpha()
-                        self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char1 = ballFighters.DaggerFighter(Vector2(350,300))
-                    elif self.screenDim.x-350 <= mouse_pos.x <= self.screenDim.x-300 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
-                        # First Ball - Sword
-                        self.image2 = pygame.image.load("assets/Sword.png").convert_alpha()
-                        self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char2 = ballFighters.SwordFighter(Vector2(450,300))
-                    elif self.screenDim.x-275 <= mouse_pos.x <= self.screenDim.x-225 and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
-                        # First Ball - Dagger
-                        self.image2 = pygame.image.load("assets/Dagger.png").convert_alpha()
-                        self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
-                        self.char2 = ballFighters.DaggerFighter(Vector2(450,300))
+                    ballsList = [ballFighters.SwordFighter, ballFighters.DaggerFighter, ballFighters.Brawler]
+                    # First Ball selections
+                    for i in range(3):
+                        if 50+75*i <= mouse_pos.x <= 100+75*i and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
+                            ball = ballsList[i](Vector2(350,300))
+                            self.image1 = pygame.image.load(ball.image).convert_alpha()
+                            self.image1 = pygame.transform.scale(self.image1, (self.screenDim.x-550, self.screenDim.y-400))
+                            self.char1 = ball
+
+                    # Second Ball selections
+                    for i in range(3):
+                        if self.screenDim.x-350+75*i <= mouse_pos.x <= self.screenDim.x-300+75*i and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
+                            ball = ballsList[i](Vector2(450,300))
+                            self.image2 = pygame.image.load(ball.image).convert_alpha()
+                            self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
+                            self.char2 = ball
                     # Add more selections as needed
+
                     # Start Button clicked
-                    elif (self.screenDim.x/2-75 <= mouse_pos.x <= self.screenDim.x/2+75 and
+                    if (self.screenDim.x/2-75 <= mouse_pos.x <= self.screenDim.x/2+75 and
                           self.screenDim.y-100 <= mouse_pos.y <= self.screenDim.y-50):
                         
                         character1, character2 = creation.getCharacters()
@@ -101,24 +98,32 @@ class CreateSettings():
         display2 = pygame.draw.rect(self.screen, (255, 255, 255), (self.screenDim.x-345, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
         self.screen.blit(self.image2, display2)
 
-        # Draw Settings Selection Boxes
-        ## First Ball
-        ### Sword
-        pygame.draw.rect(self.screen, (0, 0, 0), (50, self.screenDim.y-250, 50, 50), 5)
-        pygame.draw.rect(self.screen, (145, 35, 65), (55, self.screenDim.y-245, 40, 40), 0)
+        # Draw Selection Buttons
+        colours = [(145, 35, 65), (85, 135, 65), (86, 86, 73)]
+        labels = ["Sword", "Dagger", "Brawler"]
 
-        ### Dagger
-        pygame.draw.rect(self.screen, (0, 0, 0), (125, self.screenDim.y-250, 50, 50), 5)
-        pygame.draw.rect(self.screen, (85, 135, 65), (130, self.screenDim.y-245, 40, 40), 0)       
+        # Draw buttons
+        ## Use mod if need to add enough types to need new line
+        for i in range(3):
+            # First Ball boxes/buttons
+            pygame.draw.rect(self.screen, (0, 0, 0), (50 + 75*i, self.screenDim.y-250, 50, 50), 5)
+            pygame.draw.rect(self.screen, colours[i], (55 + 75*i, self.screenDim.y-245, 40, 40), 0)
 
-        ## Second Ball
-        ### Sword
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, self.screenDim.y-250, 50, 50), 5)
-        pygame.draw.rect(self.screen, (145, 35, 65), (self.screenDim.x-345, self.screenDim.y-245, 40, 40), 0)
+            # Second Ball boxes/buttons
+            pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350 + 75*i, self.screenDim.y-250, 50, 50), 5)
+            pygame.draw.rect(self.screen, colours[i], (self.screenDim.x-345 + 75*i, self.screenDim.y-245, 40, 40), 0)
+        
+        # Draw labels
+        for i in range(3):
+            font = pygame.font.SysFont(None, 24)
+            text = font.render(labels[i], True, (255, 255, 255))
+            # First Ball Labels
+            text_rect1 = text.get_rect(center=(75 + i*75, self.screenDim.y-175))
+            self.screen.blit(text, text_rect1)
+            # Second Ball Labels
+            text_rect2 = text.get_rect(center=(self.screenDim.x-325 + i*75, self.screenDim.y-175))
+            self.screen.blit(text, text_rect2)
 
-        ### Dagger
-        pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-275, self.screenDim.y-250, 50, 50), 5)
-        pygame.draw.rect(self.screen, (85, 135, 65), (self.screenDim.x-270, self.screenDim.y-245, 40, 40), 0)
 
         # Start Button
         if self.char1 is not None and self.char2 is not None:
