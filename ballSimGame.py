@@ -37,7 +37,22 @@ class BallGame():
         '''
         Update game state
         '''
-        pass
+        # move balls
+        self.character1.move()
+        self.character2.move()
+
+        # Collision with walls
+        for character in [self.character1, self.character2]:
+            if character.position.x - character.radius <= 100 or character.position.x + character.radius >= self.screenDim.x - 100:
+                character.velocity.x *= -1
+            if character.position.y - character.radius <= 100 or character.position.y + character.radius >= self.screenDim.y - 150:
+                character.velocity.y *= -1
+
+        # Collision between balls
+        dist = self.character1.position.distance_to(self.character2.position)
+        if dist <= self.character1.radius + self.character2.radius:
+            # Simple elastic collision response
+            self.character1.velocity, self.character2.velocity = self.character2.velocity, self.character1.velocity
 
     def render(self):
         '''
