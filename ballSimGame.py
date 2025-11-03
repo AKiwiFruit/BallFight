@@ -2,10 +2,10 @@ import pygame
 import random
 from pygame.math import Vector2
 import ballFighters
-
+from ballFighters import BallFighter
 
 class BallGame():
-    def __init__(self):
+    def __init__(self, char1, char2):
         ''' 
         Initialize the game 
         Resizable window, 800x600 default size
@@ -16,6 +16,8 @@ class BallGame():
         pygame.display.set_caption("Ball Fight Simulator")
         self.clock = pygame.time.Clock()
         self.Playing = True
+        self.character1 = char1
+        self.character2 = char2
 
     def processEvents(self):
         ''' 
@@ -62,5 +64,5 @@ class BallGame():
             # Cap the frame rate
             self.clock.tick(60)
 
-game = BallGame()
-game.run()
+#game = BallGame()
+#game.run()

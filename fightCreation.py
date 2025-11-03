@@ -67,6 +67,16 @@ class CreateSettings():
                         self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
                         self.char2 = ballFighters.DaggerFighter()
                     # Add more selections as needed
+                    # Start Button clicked
+                    elif (self.screenDim.x/2-75 <= mouse_pos.x <= self.screenDim.x/2+75 and
+                          self.screenDim.y-100 <= mouse_pos.y <= self.screenDim.y-50):
+                        character1, character2 = creation.getCharacters()
+
+                        print(character1, character2)
+                        if character1 is not None and character2 is not None:
+                            game = ballSimGame.BallGame(character1, character2)
+                            game.run()
+                            self.Playing = False
                         
 
     def update(self):
@@ -109,6 +119,16 @@ class CreateSettings():
         pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-275, self.screenDim.y-250, 50, 50), 5)
         pygame.draw.rect(self.screen, (85, 135, 65), (self.screenDim.x-270, self.screenDim.y-245, 40, 40), 0)
 
+        # Start Button
+        if self.char1 is not None and self.char2 is not None:
+            pygame.draw.rect(self.screen, (0, 200, 0), (self.screenDim.x/2-75, self.screenDim.y-100, 150, 50), 0)
+            pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x/2-75, self.screenDim.y-100, 150, 50), 5)
+            font = pygame.font.SysFont(None, 36)
+            text = font.render("START", True, (255, 255, 255))
+            text_rect = text.get_rect(center=(self.screenDim.x/2, self.screenDim.y-75))
+            self.screen.blit(text, text_rect)
+
+
         # Update display
         pygame.display.update()
 
@@ -132,9 +152,3 @@ class CreateSettings():
 
 creation = CreateSettings()
 creation.run()
-character1, character2 = creation.getCharacters()
-
-print(character1, character2)
-#if character1 is not None and character2 is not None:
-    #game = ballSimGame.BallSimGame(character1, character2)
-    #game.run()
