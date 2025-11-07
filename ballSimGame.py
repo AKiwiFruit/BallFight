@@ -36,39 +36,55 @@ class BallGame():
     def update(self):
         '''
         Update game state
+        TODO: Inelastic ball collision which adds energy into system, health and damage system, other impulses to get movement more active instead
+        of just bouncing up and down.
         '''
         dt = 1  # Time delta placeholder for future use
+
+        # Forces and acceleration updates can be added here
+        g = Vector2(0, 0.1)  # Gravity coefficient (positive y is downwards)
+        Fg1 = g*self.character1.mass # Gravitational force on character 1
+        Fg2 = g*self.character2.mass # Gravitational force on character 2
+
+        # Drag force, using 1 for mass density and radius/100 as reference area/length (Fd = 1/2 * massden * vel^2 * refL)
+        # Absolute value and negative sign for motion opposition
+        cd = 0.4 # drag coefficient
+        Fdx1 = -1/2*0.001*self.character1.velocity.x*abs(self.character1.velocity.x)*cd*self.character1.radius/100 # Drag force x on character 1
+        Fdy1 = -1/2*0.001*self.character1.velocity.y*abs(self.character1.velocity.y)*cd*self.character1.radius/100 # Drag force y on character 1
+        Fd1 = Vector2(Fdx1, Fdy1)  # Total drag force on character 1
+        Fdx2 = -1/2*0.001*self.character2.velocity.x*abs(self.character2.velocity.x)*cd*self.character2.radius/100 # Drag force x on character 2
+        Fdy2 = -1/2*0.001*self.character2.velocity.y*abs(self.character2.velocity.y)*cd*self.character2.radius/100 # Drag force y on character 2
+        Fd2 = Vector2(Fdx2, Fdy2)  # Total drag force on character 1
+
+        # Net Forces
+        Fnet1 = Fg1 + Fd1
+        Fnet2 = Fg2 + Fd2
+        
+        # Update accelerations
+        self.character1.acceleration = (Fnet1 / self.character1.mass) * dt
+        self.character2.acceleration = (Fnet2 / self.character2.mass) * dt
 
         # move balls
         self.character1.move()
         self.character2.move()
 
-        # Forces and acceleration updates can be added here
-        g = Vector2(0, 1)  # Gravity force vector
-        self.character1.acceleration = g
-        self.character2.acceleration = g
-
         # Collision with walls
         for character in [self.character1, self.character2]:
             if character.position.x - character.radius <= 100 or character.position.x + character.radius >= self.screenDim.x - 100:
-                character.velocity.x *= -1
+                character.velocity.x *= -1.01
                 character.position.x = max(character.position.x, 100 + character.radius)
                 character.position.x = min(character.position.x, self.screenDim.x - 100 - character.radius)
 
             if character.position.y - character.radius <= 100 or character.position.y + character.radius >= self.screenDim.y - 150:
-                character.velocity.y *= -1
+                character.velocity.y *= -1.01
                 character.position.y = max(character.position.y, 100 + character.radius)
                 character.position.y = min(character.position.y, self.screenDim.y - 150 - character.radius)
-
-
 
         # Collision between balls
         dist = self.character1.position.distance_to(self.character2.position)
         if dist <= self.character1.radius + self.character2.radius:
             # Simple elastic collision response
             self.character1.velocity, self.character2.velocity = self.character2.velocity, self.character1.velocity
-
-        ## TODO: Add PHYSICS (acceleration, force)
 
     def render(self):
         '''

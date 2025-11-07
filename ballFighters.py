@@ -1,6 +1,8 @@
 import pygame
 from pygame.math import Vector2
 
+# TODO: make velocity parameter of main and not sub classes and give random starting velocities
+
 class BallFighter():
     def __init__(self, position, velocity, acceleration, image, spin, radius, color, name: str, health=100,
                  mass=1.0):
@@ -20,9 +22,10 @@ class BallFighter():
 
     def move(self):
         dt = 1  # Future placeholder delta time
-
+        print("Velocity before: " + str(self.velocity) + " Position before: " + str(self.position) + "Acceleration: " + str(self.acceleration))
         self.velocity += self.acceleration * dt
         self.position += self.velocity * dt
+        print("Velocity after: " + str(self.velocity) + " Position after: " + str(self.position) + "Acceleration: " + str(self.acceleration))
 
     def draw(self, screen):
         # Body as a circle
