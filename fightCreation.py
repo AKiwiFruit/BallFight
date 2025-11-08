@@ -93,11 +93,11 @@ class CreateSettings():
         # Draw Preview Boxes
         pygame.draw.rect(self.screen, (0, 0, 0), (50, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
         display1 = pygame.draw.rect(self.screen, (255, 255, 255), (55, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
-        self.screen.blit(self.image1, display1)
+        self.screen.blit(pygame.transform.scale(self.image1, display1.size), display1)
 
         pygame.draw.rect(self.screen, (0, 0, 0), (self.screenDim.x-350, 50, self.screenDim.x-500, self.screenDim.y-350), 5)
         display2 = pygame.draw.rect(self.screen, (255, 255, 255), (self.screenDim.x-345, 55, self.screenDim.x-510, self.screenDim.y-360), 0)
-        self.screen.blit(self.image2, display2)
+        self.screen.blit(pygame.transform.scale(self.image2, display2.size), display2)
 
         # Draw Selection Buttons
         colours = [(145, 35, 65), (85, 135, 65), (86, 86, 73)]

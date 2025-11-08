@@ -1,13 +1,14 @@
 import pygame
 from pygame.math import Vector2
+import random
 
-# TODO: make velocity parameter of main and not sub classes and give random starting velocities
+def randomizer(lower, upper):
+    return random.randint(lower, upper)
 
 class BallFighter():
-    def __init__(self, position, velocity, acceleration, image, spin, radius, color, name: str, health=100,
-                 mass=1.0):
+    def __init__(self, position, acceleration, image, spin, radius, color, name: str, mass, health=100):
         self.position = Vector2(position)
-        self.velocity = Vector2(velocity)
+        self.velocity = Vector2(randomizer(-5, 5), randomizer(-5, 5))
         self.acceleration = Vector2(acceleration)
         self.image = image
         self.spin = spin
@@ -44,15 +45,15 @@ class BallFighter():
         screen.blit(img, img.get_rect(center=(int(self.position.x), int(self.position.y))))
 
 class SwordFighter(BallFighter):
-    def __init__(self, position, velocity = Vector2(2,2), acceleration = Vector2(0,0)):
-        super().__init__(position, velocity, acceleration, "assets/SwordFighter.png", spin=5, radius=40, color=(205, 50, 50), name="Sword")
+    def __init__(self, position, acceleration = Vector2(0,0)):
+        super().__init__(position, acceleration, "assets/SwordFighter.png", spin=5, radius=40, color=(205, 50, 50), name="Sword", mass=1)
 
 class DaggerFighter(BallFighter):
-    def __init__(self, position, velocity = Vector2(2,2), acceleration = Vector2(0,0)):
-        super().__init__(position, velocity, acceleration, "assets/DaggerFighter.png", spin=5, radius=40, color=(50, 205, 50), name="Dagger")
+    def __init__(self, position, acceleration = Vector2(0,0)):
+        super().__init__(position, acceleration, "assets/DaggerFighter.png", spin=5, radius=40, color=(50, 205, 50), name="Dagger", mass=1)
 
 class Brawler(BallFighter):
-    def __init__(self, position, velocity = Vector2(2,2), acceleration = Vector2(0,0)):
-        super().__init__(position, velocity, acceleration, "assets/Brawler.png", spin=5, radius=40, color=(86, 86, 73), name="Brawler")
+    def __init__(self, position, acceleration = Vector2(0,0)):
+        super().__init__(position, acceleration, "assets/Brawler.png", spin=5, radius=40, color=(86, 86, 73), name="Brawler", mass=2)
 
 # Can make more types here as wanted
