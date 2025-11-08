@@ -3,6 +3,7 @@ import random
 from pygame.math import Vector2
 import ballFighters
 from ballFighters import BallFighter
+import numpy as np
 
 class BallGame():
     def __init__(self, char1, char2):
@@ -36,8 +37,7 @@ class BallGame():
     def update(self):
         '''
         Update game state
-        TODO: Inelastic ball collision which adds energy into system, health and damage system, other impulses to get movement more active instead
-        of just bouncing up and down.
+        TODO: health and damage system, weapon movement and stuff
         '''
         dt = 1  # Time delta placeholder for future use
 
@@ -71,29 +71,77 @@ class BallGame():
         # Collision with walls (generates energy/speed)
         for character in [self.character1, self.character2]:
             if character.position.x - character.radius <= 100 or character.position.x + character.radius >= self.screenDim.x - 100:
-                character.velocity.x *= -1.05
+                if character.velocity.x < 5:
+                    character.velocity.x *= -1.15
+                else:
+                    character.velocity.x *= -1
                 character.position.x = max(character.position.x, 100 + character.radius)
                 character.position.x = min(character.position.x, self.screenDim.x - 100 - character.radius)
 
             if character.position.y - character.radius <= 100 or character.position.y + character.radius >= self.screenDim.y - 150:
-                character.velocity.y *= -1.05
+                if character.velocity.y < 5:
+                    character.velocity.y *= -1.15
+                else:
+                    character.velocity.y *= -1
                 character.position.y = max(character.position.y, 100 + character.radius)
                 character.position.y = min(character.position.y, self.screenDim.y - 150 - character.radius)
 
         # Collision between balls
         dist = self.character1.position.distance_to(self.character2.position)
-        Cr = 1.05 # Restitution Coefficient (greater than 1 for superelastic collision where they leave with more energy/speed)
+        
         if dist <= self.character1.radius + self.character2.radius:
+            
             # declare variables for cleaner final equation 
-            v1 = self.character1.velocity
-            v2 = self.character2.velocity
+            x1 = self.character1.position.x
+            y1 = self.character1.position.y
+            v1x = self.character1.velocity.x
+            v1y = self.character1.velocity.y
+            v1 = np.hypot(v1x, v1y) # scalar speed of ball 1
             m1 = self.character1.mass
-            m2 = self.character2.mass
+            if v1 == 0:
+                cos1, sin1 = 0
+            else:
+                cos1 = v1x/v1
+                sin1 = v1y/v1
 
+            x2 = self.character2.position.x
+            y2 = self.character2.position.y
+            v2x = self.character2.velocity.x
+            v2y = self.character2.velocity.y
+            v2 = np.hypot(v2x, v2y) # scalar speed of ball 2
+            m2 = self.character2.mass
+            if v2 == 0:
+                cos2, sin2 = 0
+            else:
+                cos2 = v2x/v2
+                sin2 = v2y/v2
+
+            # angle stuff
+            # sin(theta-phi) = sin(theta)cos(phi) - cos(theta)sin(phi)
+            # cos(theta-phi) = cos(theta)cos(phi) + sin(theta)sin(phi)
+            phi = np.atan2(y2-y1, x2-x1) # contact angle
+            cosphi = np.cos(phi)
+            sinphi = np.sin(phi)
+            cosphishift = np.cos(phi + np.pi/2)
+            sinphishift = np.sin(phi + np.pi/2)
+
+            cost1mp = cos1*cosphi + sin1*sinphi # cos(theta1 - phi)
+            sint1mp = sin1*cosphi - cos1*sinphi # sin(theta1 - phi)
+
+            cost2mp = cos2*cosphi + sin2*sinphi # cos(theta2 - phi)
+            sint2mp = sin2*cosphi - cos2*sinphi # sin(theta2 - phi)
+
+            # Coefficient of restitution, 0 = perfectly inelastic, 1 = perfectly elastic, >1 = superelastic
+            e = 1.1
+            
             # Collision formula (started to derive then decided too much work when not perfectly elastic or inelastic
-            # so i got the formula from wikipedia). Coefficient of Restitution to control elasticity of collision.
-            self.character1.velocity = (Cr*m2*(v2-v1) + m1*v1 + m2*v2)/(m1 + m2)
-            self.character2.velocity = (Cr*m1*(v1-v2) + m1*v1 + m2*v2)/(m1 + m2)
+            # so i got the formula from wikipedia).
+            self.character1.velocity.x = cosphi*(v1*cost1mp*(m1-m2) + (1+e)*m2*v2*cost2mp)/(m1 + m2) + v1*sint1mp*cosphishift
+            self.character1.velocity.y = sinphi*(v1*cost1mp*(m1-m2) + (1+e)*m2*v2*cost2mp)/(m1 + m2) + v1*sint1mp*sinphishift
+
+            self.character2.velocity.x = cosphi*(v2*cost2mp*(m2-m1) + (1+e)*m1*v1*cost1mp)/(m1 + m2) + v2*sint2mp*cosphishift
+            self.character2.velocity.y = sinphi*(v2*cost2mp*(m2-m1) + (1+e)*m1*v1*cost1mp)/(m1 + m2) + v2*sint2mp*sinphishift
+            
 
 
     def render(self):
