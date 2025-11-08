@@ -54,7 +54,7 @@ class BallGame():
         Fd1 = Vector2(Fdx1, Fdy1)  # Total drag force on character 1
         Fdx2 = -1/2*0.001*self.character2.velocity.x*abs(self.character2.velocity.x)*cd*self.character2.radius/100 # Drag force x on character 2
         Fdy2 = -1/2*0.001*self.character2.velocity.y*abs(self.character2.velocity.y)*cd*self.character2.radius/100 # Drag force y on character 2
-        Fd2 = Vector2(Fdx2, Fdy2)  # Total drag force on character 1
+        Fd2 = Vector2(Fdx2, Fdy2)  # Total drag force on character 2
 
         # Net Forces
         Fnet1 = Fg1 + Fd1
@@ -83,7 +83,7 @@ class BallGame():
         # Collision between balls
         dist = self.character1.position.distance_to(self.character2.position)
         if dist <= self.character1.radius + self.character2.radius:
-            # Simple elastic collision response
+            # Simple collision response
             self.character1.velocity, self.character2.velocity = self.character2.velocity, self.character1.velocity
 
     def render(self):
@@ -103,7 +103,6 @@ class BallGame():
 
         # Draw Balls
         self.character1.draw(self.screen)
-
         self.character2.draw(self.screen)
 
         # Update display
@@ -120,6 +119,3 @@ class BallGame():
             self.render()
             # Cap the frame rate
             self.clock.tick(60)
-
-#game = BallGame()
-#game.run()

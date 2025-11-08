@@ -21,15 +21,17 @@ class BallFighter():
         return self.name
 
     def move(self):
-        dt = 1  # Future placeholder delta time
-        print("Velocity before: " + str(self.velocity) + " Position before: " + str(self.position) + "Acceleration: " + str(self.acceleration))
+        dt = 1  # Future placeholder delta time if wanted
+        
+        # Update velocity and position (classical newtonian)
         self.velocity += self.acceleration * dt
         self.position += self.velocity * dt
-        print("Velocity after: " + str(self.velocity) + " Position after: " + str(self.position) + "Acceleration: " + str(self.acceleration))
+        
 
     def draw(self, screen):
         # Body as a circle
         pygame.draw.circle(screen, self.color, (int(self.position.x), int(self.position.y)), self.radius)
+
         # Image overlay
         img = pygame.image.load(self.image).convert_alpha()
         img = pygame.transform.scale(img, (self.radius*2*2.5, self.radius*2*2.5))

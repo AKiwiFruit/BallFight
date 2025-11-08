@@ -45,9 +45,11 @@ class CreateSettings():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left click
                     mouse_pos = Vector2(event.pos)
+
                     # Check for selection boxes being clicked to select character
                     ballsList = [ballFighters.SwordFighter, ballFighters.DaggerFighter, ballFighters.Brawler]
                     imageList = ["assets/Sword.png", "assets/Dagger.png", "assets/Brawler.png"]
+
                     # First Ball selections
                     for i in range(3):
                         if 50+75*i <= mouse_pos.x <= 100+75*i and self.screenDim.y-250 <= mouse_pos.y <= self.screenDim.y-200:
@@ -61,15 +63,15 @@ class CreateSettings():
                             self.image2 = pygame.image.load(imageList[i]).convert_alpha()
                             self.image2 = pygame.transform.scale(self.image2, (self.screenDim.x-550, self.screenDim.y-400))
                             self.char2 = ballsList[i](Vector2(450,300))
+
                     # Add more selections as needed
 
                     # Start Button clicked
                     if (self.screenDim.x/2-75 <= mouse_pos.x <= self.screenDim.x/2+75 and
                           self.screenDim.y-100 <= mouse_pos.y <= self.screenDim.y-50):
                         
+                        # get characters and start game with check to make sure characters arent null (shouldnt be necessary) also end creation mode
                         character1, character2 = creation.getCharacters()
-
-                        print(character1, character2)
                         if character1 is not None and character2 is not None:
                             game = ballSimGame.BallGame(character1, character2)
                             game.run()
