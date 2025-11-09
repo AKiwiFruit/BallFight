@@ -42,7 +42,7 @@ class BallGame():
         dt = 1  # Time delta placeholder for future use
 
         # Forces and acceleration updates can be added here
-        g = Vector2(0, 0.1)  # Gravity coefficient (positive y is downwards)
+        g = Vector2(0, 0.05)  # Gravity coefficient (positive y is downwards)
         Fg1 = g*self.character1.mass # Gravitational force on character 1
         Fg2 = g*self.character2.mass # Gravitational force on character 2
 
@@ -130,6 +130,17 @@ class BallGame():
 
             cost2mp = cos2*cosphi + sin2*sinphi # cos(theta2 - phi)
             sint2mp = sin2*cosphi - cos2*sinphi # sin(theta2 - phi)
+
+            # correct any overlapping
+            overlap = 0.5 * (self.character1.radius + self.character2.radius - dist + 1e-6) # overlap error bound
+            fracx = (x2 - x1) / dist # fraction of how much possible overlap would be x (negative if x1 bigger than x2)
+            fracy = (y2 - y1) / dist # fraction of how much possible overlap would be y (negative if y1 bigger than y2)
+
+            # move balls away slightly
+            self.character1.position.x -= overlap * fracx
+            self.character1.position.y -= overlap * fracy
+            self.character2.position.x += overlap * fracx
+            self.character2.position.y += overlap * fracy
 
             # Coefficient of restitution, 0 = perfectly inelastic, 1 = perfectly elastic, >1 = superelastic
             e = 1.1
