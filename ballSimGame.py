@@ -21,9 +21,6 @@ class BallGame():
         self.character1 = char1
         self.character2 = char2
 
-        #temptest
-        self.weapon = ballWeapons.Sword(Vector2(200, 200))
-
     def processEvents(self):
         ''' 
          Process events
@@ -43,8 +40,6 @@ class BallGame():
         Update game state
         TODO: health and damage system, weapon movement and stuff
         '''
-        self.weapon.update()
-        #temptest^
 
         dt = 1  # Time delta placeholder for future use
 
@@ -185,8 +180,11 @@ class BallGame():
         self.character1.draw(self.screen)
         self.character2.draw(self.screen)
 
-        #temptest
-        self.weapon.draw(self.screen)
+        # draw weapons (here so they go over the balls)
+        if self.character1.weapon != None:
+            self.character1.weapon.draw(self.screen)
+        if self.character2.weapon != None:
+            self.character2.weapon.draw(self.screen)
 
         # Update display
         pygame.display.update()
