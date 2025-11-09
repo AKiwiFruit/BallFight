@@ -6,6 +6,18 @@ from ballFighters import BallFighter
 import numpy as np
 import ballWeapons
 
+
+    # helper to get distance from some point to a line segment
+def distancePointToSegment(point: Vector2, segStart: Vector2, segEnd: Vector2):
+    # TODO implement
+    pass
+
+# helper to see if lines intersect for weapon to weapon collisions
+def segmentIntersect(p1, p2, q1, q2):
+    # TODO
+    pass
+
+
 class BallGame():
     def __init__(self, char1, char2):
         ''' 
@@ -34,6 +46,7 @@ class BallGame():
                 # If window is resized, update the screen dimensions
                 self.screenDim = Vector2(event.w, event.h)
                 self.screen = pygame.display.set_mode((self.screenDim.x, self.screenDim.y), pygame.RESIZABLE)
+
 
     def update(self):
         '''
@@ -66,14 +79,14 @@ class BallGame():
         self.character1.acceleration = (Fnet1 / self.character1.mass) * dt
         self.character2.acceleration = (Fnet2 / self.character2.mass) * dt
 
-        # move balls
+        # move balls and weapons
         self.character1.move()
         self.character2.move()
 
         # Collision with walls (generates energy/speed)
         for character in [self.character1, self.character2]:
             if character.position.x - character.radius <= 100 or character.position.x + character.radius >= self.screenDim.x - 100:
-                if character.velocity.x < 5:
+                if character.velocity.x < 3:
                     character.velocity.x *= -1.15
                 else:
                     character.velocity.x *= -1
@@ -81,7 +94,7 @@ class BallGame():
                 character.position.x = min(character.position.x, self.screenDim.x - 100 - character.radius)
 
             if character.position.y - character.radius <= 100 or character.position.y + character.radius >= self.screenDim.y - 150:
-                if character.velocity.y < 5:
+                if character.velocity.y < 3:
                     character.velocity.y *= -1.15
                 else:
                     character.velocity.y *= -1
@@ -147,25 +160,66 @@ class BallGame():
             # Coefficient of restitution, 0 = perfectly inelastic, 1 = perfectly elastic, >1 = superelastic
             e = 1.1
             
-            # Collision formula (started to derive then decided too much work when not perfectly elastic or inelastic
-            # so i got the formula from wikipedia).
+            # Collision formula (started to derive then decided too much unncessary work to relearn and 
+            # do the algebra so i got the formula from wikipedia).
             self.character1.velocity.x = cosphi*(v1*cost1mp*(m1-m2) + (1+e)*m2*v2*cost2mp)/(m1 + m2) + v1*sint1mp*cosphishift
             self.character1.velocity.y = sinphi*(v1*cost1mp*(m1-m2) + (1+e)*m2*v2*cost2mp)/(m1 + m2) + v1*sint1mp*sinphishift
 
             self.character2.velocity.x = cosphi*(v2*cost2mp*(m2-m1) + (1+e)*m1*v1*cost1mp)/(m1 + m2) + v2*sint2mp*cosphishift
             self.character2.velocity.y = sinphi*(v2*cost2mp*(m2-m1) + (1+e)*m1*v1*cost1mp)/(m1 + m2) + v2*sint2mp*sinphishift
-            
 
+            # Weapon COLLISIONS :(
+
+            # Weapon to Ball collision
+            for attacker, defender in [(self.character1, self.character2), (self.character2, self.character1)]:
+                if attacker.weapon != None:
+                    start, end = attacker.weapon.getWeaponSegment()
+                    dist = distancePointToSegment(defender.position, start, end)
+                    if dist <= defender.radius:
+                        print(f"{attacker.getName()} hit {defender.getName()}!")
+                        defender.takeDamage(attacker.weapon)
+                        # knockback
+                        direction = (defender.position - attacker.weapon.pivot).normalize()
+                        defender.velocity += direction * 2  # adjust strength
+
+            # weapon to weapon collision
+            if self.character1.weapon and self.character2.weapon:
+                w1 = self.character1.weapon
+                w2 = self.character2.weapon
+                start1, end1 = w1.getWeaponSegment()
+                start2, end2 = w2.getWeaponSegment()
+                if segmentsIntersect(start1, end1, start2, end2):
+                    print("BOOM CLASH CLANG")
+                    # Optional bounce or spark effect            
 
     def render(self):
         '''
         Render game visuals
         '''
-        self.screen.fill((145, 63, 146))  # Clear screen with purple background
+        self.screen.fill((105, 63, 106))  # Clear screen with purple background
 
         # Draw Arena
         pygame.draw.rect(self.screen, (0, 0, 0), (100, 100, self.screenDim.x-200, self.screenDim.y-250), 5)
         pygame.draw.rect(self.screen, (255, 255, 255), (105, 105, self.screenDim.x-210, self.screenDim.y-260), 0)
+
+        # match title outline
+        font = pygame.font.SysFont(None, 64)
+        title1outline = font.render(self.character1.getName(), True, (0,0,0))
+        title2outline = font.render(self.character2.getName(), True, (0,0,0))
+
+        outlineOffset = 2 # Outline made by offsetting black text in four direction, this is how far theyre offset
+
+        self.screen.blit(title1outline, title1outline.get_rect(center=(self.screenDim.x/4 + outlineOffset, 50)))
+        self.screen.blit(title2outline, title2outline.get_rect(center=(3*self.screenDim.x/4 + outlineOffset, 50)))
+
+        self.screen.blit(title1outline, title1outline.get_rect(center=(self.screenDim.x/4 - outlineOffset, 50)))
+        self.screen.blit(title2outline, title2outline.get_rect(center=(3*self.screenDim.x/4 - outlineOffset, 50)))
+
+        self.screen.blit(title1outline, title1outline.get_rect(center=(self.screenDim.x/4, 50 + outlineOffset)))
+        self.screen.blit(title2outline, title2outline.get_rect(center=(3*self.screenDim.x/4, 50 + outlineOffset)))
+
+        self.screen.blit(title1outline, title1outline.get_rect(center=(self.screenDim.x/4, 50 - outlineOffset)))
+        self.screen.blit(title2outline, title2outline.get_rect(center=(3*self.screenDim.x/4, 50 - outlineOffset)))
 
         # Draw Match Title
         font = pygame.font.SysFont(None, 64)

@@ -53,9 +53,24 @@ class Weapon():
         # new rotated image and rect
         self.image, self.rect = rotateAboutPivot(self.originalImage, self.angle, self.pivot, self.position)
 
+    def getWeaponSegment(self):
+        """
+        Return the (start point, end point) of the weapon
+        start_point = pivot
+        end_point = pivot + rotated offset
+        """
+        start = self.pivot
+        end = self.pivot + ((self.position - start)*1.5).rotate(-self.angle)
+        return start, end
+    
     def draw(self, screen):
-        pygame.draw.line(screen, 'black', self.pivot, self.rect.center)
         screen.blit(self.image, self.rect)
+        pygame.draw.rect(screen, (0,0,0), self.rect, width=2)
+
+        # Red line to see weapon line segment
+        start, end = self.getWeaponSegment()
+        pygame.draw.line(screen, 'red', start, end, width=3)
+
 
 class Sword(Weapon):
     '''
@@ -64,7 +79,7 @@ class Sword(Weapon):
     def __init__(self, pivot):
         swordImage = pygame.image.load("assets/SwordWeapon.png").convert_alpha()
         scaledSwordImage = pygame.transform.scale(swordImage, (200, 200))
-        super().__init__(pivot, image = scaledSwordImage, spinSpeed = 2, damage = 1, length = 80, startAngle=45)
+        super().__init__(pivot, image = scaledSwordImage, spinSpeed = 1, damage = 1, length = 80, startAngle=45)
 
 class Dagger(Weapon):
     '''
@@ -73,4 +88,4 @@ class Dagger(Weapon):
     def __init__(self, pivot):
         daggerImage = pygame.image.load("assets/DaggerWeapon.png").convert_alpha()
         scaledDaggerImage = pygame.transform.scale(daggerImage, (175, 175))
-        super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 5, damage = 1, length = 60, startAngle=-45)
+        super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 1, damage = 1, length = 60, startAngle=-45)
