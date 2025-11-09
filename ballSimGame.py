@@ -4,6 +4,7 @@ from pygame.math import Vector2
 import ballFighters
 from ballFighters import BallFighter
 import numpy as np
+import ballWeapons
 
 class BallGame():
     def __init__(self, char1, char2):
@@ -19,6 +20,9 @@ class BallGame():
         self.Playing = True
         self.character1 = char1
         self.character2 = char2
+
+        #temptest
+        self.weapon = ballWeapons.Sword(Vector2(200, 200))
 
     def processEvents(self):
         ''' 
@@ -39,6 +43,9 @@ class BallGame():
         Update game state
         TODO: health and damage system, weapon movement and stuff
         '''
+        self.weapon.update()
+        #temptest^
+
         dt = 1  # Time delta placeholder for future use
 
         # Forces and acceleration updates can be added here
@@ -177,6 +184,9 @@ class BallGame():
         # Draw Balls
         self.character1.draw(self.screen)
         self.character2.draw(self.screen)
+
+        #temptest
+        self.weapon.draw(self.screen)
 
         # Update display
         pygame.display.update()
