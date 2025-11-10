@@ -13,9 +13,53 @@ def distancePointToSegment(point: Vector2, segStart: Vector2, segEnd: Vector2):
     pass
 
 # helper to see if lines intersect for weapon to weapon collisions
-def segmentIntersect(p1, p2, q1, q2):
-    # TODO
-    pass
+def segmentsIntersect(p1, p2, q1, q2):
+    # find linear equations
+    slope1 = (p2.y-p1.y)/(p2.x-p1.x)
+    b1 = p1.y - slope1*p1.x
+
+    slope2 = (q2.y-q1.y)/(q2.x-q1.x)
+    b2 = q1.y - slope2*q1.x
+
+    # solve for x
+    C = slope1 - slope2
+    if C == 0:
+        if b1 == b2:
+            return True
+        else:
+            return False
+    x = (b2 - b1)/C
+
+    # if first line segment goes left to right
+    if p1.x < p2.x:
+        # if second line segment goes left to right
+        if q1.x < q2.x:
+            if (p1.x <= x <= p2.x) and (q1.x <= x <= q2.x):
+                return True
+            else: 
+                return False
+        # if second line segment goes right to left
+        if q1.x > q2.x:
+            if (p1.x <= x <= p2.x) and (q2.x <= x <= q1.x):
+                return True
+            else: 
+                return False
+            
+    elif p1.x > p2.x:    
+        # if second line segment goes left to right
+        if q1.x < q2.x:
+            if (p2.x <= x <= p1.x) and (q1.x <= x <= q2.x):
+                return True
+            else: 
+                return False
+        # if second line segment goes right to left
+        if q1.x > q2.x:
+            if (p2.x <= x <= p1.x) and (q2.x <= x <= q1.x):
+                return True
+            else: 
+                return False
+            
+    return False
 
 
 class BallGame():
@@ -168,29 +212,35 @@ class BallGame():
             self.character2.velocity.x = cosphi*(v2*cost2mp*(m2-m1) + (1+e)*m1*v1*cost1mp)/(m1 + m2) + v2*sint2mp*cosphishift
             self.character2.velocity.y = sinphi*(v2*cost2mp*(m2-m1) + (1+e)*m1*v1*cost1mp)/(m1 + m2) + v2*sint2mp*sinphishift
 
-            # Weapon COLLISIONS :(
+        # Weapon COLLISIONS :(
 
-            # Weapon to Ball collision
-            for attacker, defender in [(self.character1, self.character2), (self.character2, self.character1)]:
-                if attacker.weapon != None:
-                    start, end = attacker.weapon.getWeaponSegment()
-                    dist = distancePointToSegment(defender.position, start, end)
-                    if dist <= defender.radius:
-                        print(f"{attacker.getName()} hit {defender.getName()}!")
-                        defender.takeDamage(attacker.weapon)
-                        # knockback
-                        direction = (defender.position - attacker.weapon.pivot).normalize()
-                        defender.velocity += direction * 2  # adjust strength
+        # # Weapon to Ball collision
+        # for attacker, defender in [(self.character1, self.character2), (self.character2, self.character1)]:
+        #     if attacker.weapon != None:
+        #         start, end = attacker.weapon.getWeaponSegment()
+        #         dist = distancePointToSegment(defender.position, start, end)
+        #         if dist <= defender.radius:
+        #             print(f"{attacker.getName()} hit {defender.getName()}!")
+        #             defender.takeDamage(attacker.weapon)
+        #             # knockback
+        #             direction = (defender.position - attacker.weapon.pivot).normalize()
+        #             defender.velocity += direction * 2  # adjust strength
 
-            # weapon to weapon collision
-            if self.character1.weapon and self.character2.weapon:
-                w1 = self.character1.weapon
-                w2 = self.character2.weapon
-                start1, end1 = w1.getWeaponSegment()
-                start2, end2 = w2.getWeaponSegment()
-                if segmentsIntersect(start1, end1, start2, end2):
-                    print("BOOM CLASH CLANG")
-                    # Optional bounce or spark effect            
+        # weapon to weapon collision
+        if self.character1.weapon and self.character2.weapon:
+            w1 = self.character1.weapon
+            w2 = self.character2.weapon
+            start1, end1 = w1.getWeaponSegment()
+            start2, end2 = w2.getWeaponSegment()
+            if segmentsIntersect(start1, end1, start2, end2):
+                print("BOOM CLASH CLANG")
+                # Weapon rebound
+                w1.spinSpeed *= -1
+                w2.spinSpeed *= -1
+                w1.update(w1.pivot, dt = 4)
+                w2.update(w2.pivot, dt = 4)
+
+                # bounce and/or spark effect            
 
     def render(self):
         '''

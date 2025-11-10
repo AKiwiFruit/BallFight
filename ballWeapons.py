@@ -37,11 +37,10 @@ class Weapon():
         self.rect = self.image.get_rect(center = self.position)
 
     
-    def update(self, newPiv: Vector2):
+    def update(self, newPiv: Vector2, dt = 1):
         '''
         update weapon stuff, needs new position of pivot
         '''
-        dt = 1
         self.angle += self.spinSpeed*dt
 
         # update positions
@@ -59,8 +58,8 @@ class Weapon():
         start_point = pivot
         end_point = pivot + rotated offset
         """
-        start = self.pivot
-        end = self.pivot + ((self.position - start)*1.5).rotate(-self.angle)
+        start = self.pivot + Vector2(40, 0).rotate(-self.angle - self.startAngle)
+        end = self.pivot + ((self.position - self.pivot)*1.5).rotate(-self.angle)
         return start, end
     
     def draw(self, screen):
@@ -79,7 +78,7 @@ class Sword(Weapon):
     def __init__(self, pivot):
         swordImage = pygame.image.load("assets/SwordWeapon.png").convert_alpha()
         scaledSwordImage = pygame.transform.scale(swordImage, (200, 200))
-        super().__init__(pivot, image = scaledSwordImage, spinSpeed = 1, damage = 1, length = 80, startAngle=45)
+        super().__init__(pivot, image = scaledSwordImage, spinSpeed = 3, damage = 1, length = 80, startAngle=45)
 
 class Dagger(Weapon):
     '''
@@ -88,4 +87,4 @@ class Dagger(Weapon):
     def __init__(self, pivot):
         daggerImage = pygame.image.load("assets/DaggerWeapon.png").convert_alpha()
         scaledDaggerImage = pygame.transform.scale(daggerImage, (175, 175))
-        super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 1, damage = 1, length = 60, startAngle=-45)
+        super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 5, damage = 1, length = 60, startAngle=-45)
