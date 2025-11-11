@@ -41,7 +41,7 @@ class BallFighter():
 
     def takeDamage(self, attacker):
         '''
-        takes damage from other ball
+        takes damage from other ball, attacker is what has the damage attriubte, typically the weapon unles brawler
         '''
         self.health -= attacker.damage
         
@@ -72,7 +72,9 @@ class DaggerFighter(BallFighter):
                          name="Dagger", mass=1, weapon = ballWeapons.Dagger(position))
 
 class Brawler(BallFighter):
-    def __init__(self, position, acceleration = Vector2(0,0)):
-        super().__init__(position, acceleration, "assets/Brawler.png", radius=40, color=(86, 86, 73), name="Brawler", mass=1.5)
+    def __init__(self, position, acceleration = Vector2(0,0), damage = 2):
+        super().__init__(position, acceleration, "assets/Brawler.png", radius=40, color=(86, 86, 73), 
+                         name="Brawler", mass=1.5)
+        self.damage = damage
 
 # Can make more types here as wanted

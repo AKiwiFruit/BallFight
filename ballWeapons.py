@@ -1,5 +1,10 @@
 import pygame
 from pygame.math import Vector2
+import random
+
+# Copied from ballFighters, using for spin amount
+def randomizer(lower, upper):
+    return random.randint(lower, upper)
 
 def rotateAboutPivot(image, angle, pivot, origin):
     '''
@@ -52,6 +57,11 @@ class Weapon():
         # new rotated image and rect
         self.image, self.rect = rotateAboutPivot(self.originalImage, self.angle, self.pivot, self.position)
 
+    # spin weapon around pivot, using for start position
+    def spin(self, amount):
+        self.angle += amount
+        self.image, self.rect = rotateAboutPivot(self.originalImage, self.angle, self.pivot, self.position)
+
     def getWeaponSegment(self):
         """
         Return the (start point, end point) of the weapon
@@ -79,6 +89,7 @@ class Sword(Weapon):
         swordImage = pygame.image.load("assets/SwordWeapon.png").convert_alpha()
         scaledSwordImage = pygame.transform.scale(swordImage, (200, 200))
         super().__init__(pivot, image = scaledSwordImage, spinSpeed = 3, damage = 1, length = 80, startAngle=45)
+        self.spin(randomizer(-90, 90))
 
 class Dagger(Weapon):
     '''
@@ -88,3 +99,4 @@ class Dagger(Weapon):
         daggerImage = pygame.image.load("assets/DaggerWeapon.png").convert_alpha()
         scaledDaggerImage = pygame.transform.scale(daggerImage, (175, 175))
         super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 5, damage = 1, length = 60, startAngle=-45)
+        self.spin(randomizer(-90, 90))

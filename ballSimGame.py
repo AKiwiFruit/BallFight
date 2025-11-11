@@ -7,10 +7,39 @@ import numpy as np
 import ballWeapons
 
 
-    # helper to get distance from some point to a line segment
-def distancePointToSegment(point: Vector2, segStart: Vector2, segEnd: Vector2):
-    # TODO implement
-    pass
+# helper to get distance from some point to a line segment
+# Source - https://stackoverflow.com/a
+# Posted by quano, modified by community. See post 'Timeline' for change history
+# Retrieved 2025-11-11, License - CC BY-SA 4.0
+def distLineFromPoint(x1, y1, x2, y2, x3, y3): # x3,y3 is the point
+    px = x2-x1
+    py = y2-y1
+
+    norm = px*px + py*py
+
+    u =  ((x3 - x1) * px + (y3 - y1) * py) / float(norm)
+
+    if u > 1:
+        u = 1
+    elif u < 0:
+        u = 0
+
+    x = x1 + u * px
+    y = y1 + u * py
+
+    dx = x - x3
+    dy = y - y3
+
+    # Note: If the actual distance does not matter,
+    # if you only want to compare what this function
+    # returns to other results of this function, you
+    # can just return the squared distance instead
+    # (i.e. remove the sqrt) to gain a little performance
+
+    dist = (dx*dx + dy*dy)**.5
+
+    return dist
+
 
 # helper to see if lines intersect for weapon to weapon collisions
 def segmentsIntersect(p1, p2, q1, q2):
@@ -66,10 +95,10 @@ class BallGame():
     def __init__(self, char1, char2):
         ''' 
         Initialize the game 
-        Resizable window, 800x600 default size
+        Resizable window, 800x800 default size
         '''
         pygame.init()
-        self.screenDim = Vector2(800, 600)
+        self.screenDim = Vector2(700, 700)
         self.screen = pygame.display.set_mode((self.screenDim.x, self.screenDim.y), pygame.RESIZABLE)
         pygame.display.set_caption("Ball Fight Simulator")
         self.clock = pygame.time.Clock()
@@ -130,7 +159,7 @@ class BallGame():
         # Collision with walls (generates energy/speed)
         for character in [self.character1, self.character2]:
             if character.position.x - character.radius <= 100 or character.position.x + character.radius >= self.screenDim.x - 100:
-                if character.velocity.x < 3:
+                if character.velocity.x < 7:
                     character.velocity.x *= -1.15
                 else:
                     character.velocity.x *= -1
@@ -138,7 +167,7 @@ class BallGame():
                 character.position.x = min(character.position.x, self.screenDim.x - 100 - character.radius)
 
             if character.position.y - character.radius <= 100 or character.position.y + character.radius >= self.screenDim.y - 150:
-                if character.velocity.y < 3:
+                if character.velocity.y < 7:
                     character.velocity.y *= -1.15
                 else:
                     character.velocity.y *= -1
@@ -149,6 +178,19 @@ class BallGame():
         dist = self.character1.position.distance_to(self.character2.position)
         
         if dist <= self.character1.radius + self.character2.radius:
+
+            # Unarmed fighter damage happens when balls collide
+            if (self.character1.weapon == None):
+                self.character2.takeDamage(self.character1)
+                # knockback
+                direction = (self.character2.position).normalize()
+                self.character2.velocity += direction * 0.3
+
+            if (self.character2.weapon == None):
+                self.character1.takeDamage(self.character2)
+                # knockback
+                direction = (self.character1.position).normalize()
+                self.character1.velocity += direction * 0.3
             
             # declare variables for cleaner final equation 
             x1 = self.character1.position.x
@@ -215,16 +257,15 @@ class BallGame():
         # Weapon COLLISIONS :(
 
         # # Weapon to Ball collision
-        # for attacker, defender in [(self.character1, self.character2), (self.character2, self.character1)]:
-        #     if attacker.weapon != None:
-        #         start, end = attacker.weapon.getWeaponSegment()
-        #         dist = distancePointToSegment(defender.position, start, end)
-        #         if dist <= defender.radius:
-        #             print(f"{attacker.getName()} hit {defender.getName()}!")
-        #             defender.takeDamage(attacker.weapon)
-        #             # knockback
-        #             direction = (defender.position - attacker.weapon.pivot).normalize()
-        #             defender.velocity += direction * 2  # adjust strength
+        for attacker, defender in [(self.character1, self.character2), (self.character2, self.character1)]:
+            if attacker.weapon != None:
+                start, end = attacker.weapon.getWeaponSegment()
+                dist = distLineFromPoint(start.x, start.y, end.x, end.y, defender.position.x, defender.position.y)
+                if dist <= defender.radius:
+                    defender.takeDamage(attacker.weapon)
+                    # knockback
+                    direction = (defender.position - attacker.weapon.pivot).normalize()
+                    defender.velocity += direction * 0.2  # adjust strength
 
         # weapon to weapon collision
         if self.character1.weapon and self.character2.weapon:
@@ -233,7 +274,6 @@ class BallGame():
             start1, end1 = w1.getWeaponSegment()
             start2, end2 = w2.getWeaponSegment()
             if segmentsIntersect(start1, end1, start2, end2):
-                print("BOOM CLASH CLANG")
                 # Weapon rebound
                 w1.spinSpeed *= -1
                 w2.spinSpeed *= -1
