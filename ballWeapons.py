@@ -74,11 +74,11 @@ class Weapon():
     
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        pygame.draw.rect(screen, (0,0,0), self.rect, width=2)
+        #pygame.draw.rect(screen, (0,0,0), self.rect, width=2)
 
         # Red line to see weapon line segment
-        start, end = self.getWeaponSegment()
-        pygame.draw.line(screen, 'red', start, end, width=3)
+        #start, end = self.getWeaponSegment()
+        #pygame.draw.line(screen, 'red', start, end, width=3)
 
 
 class Sword(Weapon):
@@ -98,5 +98,5 @@ class Dagger(Weapon):
     def __init__(self, pivot):
         daggerImage = pygame.image.load("assets/DaggerWeapon.png").convert_alpha()
         scaledDaggerImage = pygame.transform.scale(daggerImage, (175, 175))
-        super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 5, damage = 1, length = 60, startAngle=-45)
+        super().__init__(pivot, image = scaledDaggerImage, spinSpeed = 10, damage = 1, length = 60, startAngle=-45)
         self.spin(randomizer(-90, 90))

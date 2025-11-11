@@ -1,11 +1,8 @@
 import pygame
-import random
 from pygame.math import Vector2
-import ballFighters
 from ballFighters import BallFighter
 import numpy as np
-import ballWeapons
-
+import gameEnd
 
 # helper to get distance from some point to a line segment
 # Source - https://stackoverflow.com/a
@@ -159,7 +156,7 @@ class BallGame():
         # Collision with walls (generates energy/speed)
         for character in [self.character1, self.character2]:
             if character.position.x - character.radius <= 100 or character.position.x + character.radius >= self.screenDim.x - 100:
-                if character.velocity.x < 7:
+                if abs(character.velocity.x) < character.speedCap:
                     character.velocity.x *= -1.15
                 else:
                     character.velocity.x *= -1
@@ -167,7 +164,7 @@ class BallGame():
                 character.position.x = min(character.position.x, self.screenDim.x - 100 - character.radius)
 
             if character.position.y - character.radius <= 100 or character.position.y + character.radius >= self.screenDim.y - 150:
-                if character.velocity.y < 7:
+                if abs(character.velocity.y) < character.speedCap:
                     character.velocity.y *= -1.15
                 else:
                     character.velocity.y *= -1
@@ -181,13 +178,13 @@ class BallGame():
 
             # Unarmed fighter damage happens when balls collide
             if (self.character1.weapon == None):
-                self.character2.takeDamage(self.character1)
+                self.character2.takeDamage(self.character1.velocity.magnitude())
                 # knockback
                 direction = (self.character2.position).normalize()
                 self.character2.velocity += direction * 0.3
 
             if (self.character2.weapon == None):
-                self.character1.takeDamage(self.character2)
+                self.character1.takeDamage(self.character2.velocity.magnitude())
                 # knockback
                 direction = (self.character1.position).normalize()
                 self.character1.velocity += direction * 0.3
@@ -262,7 +259,7 @@ class BallGame():
                 start, end = attacker.weapon.getWeaponSegment()
                 dist = distLineFromPoint(start.x, start.y, end.x, end.y, defender.position.x, defender.position.y)
                 if dist <= defender.radius:
-                    defender.takeDamage(attacker.weapon)
+                    defender.takeDamage(attacker.weapon.damage)
                     # knockback
                     direction = (defender.position - attacker.weapon.pivot).normalize()
                     defender.velocity += direction * 0.2  # adjust strength
@@ -280,7 +277,18 @@ class BallGame():
                 w1.update(w1.pivot, dt = 4)
                 w2.update(w2.pivot, dt = 4)
 
-                # bounce and/or spark effect            
+                # bounce and/or spark effect     
+
+        # Win Conditions
+        if self.character1.health <= 0 and self.character2.health > 0:
+            gameEnd.gameEnd(self.character2).run()     
+            self.Playing = False
+        elif self.character2.health <= 0 and self.character1.health > 0:
+            gameEnd.gameEnd(self.character1).run() 
+            self.Playing = False
+        elif self.character1.health <= 0 and self.character2.health <= 0:
+            gameEnd.gameEnd(None).run()
+            self.Playing = False
 
     def render(self):
         '''

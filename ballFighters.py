@@ -1,5 +1,6 @@
 import pygame
 from pygame.math import Vector2
+import numpy
 import random
 import ballWeapons
 
@@ -11,7 +12,8 @@ class BallFighter():
     '''
     Superclass for the fighters who happen to be balls that bounce off walls
     '''
-    def __init__(self, position, acceleration, image, radius, color, name: str, mass, weapon = None, health=100):
+    def __init__(self, position, acceleration, image, radius, color, name: str, mass, weapon = None, health=100,
+                 speedCap = 7):
         self.position = Vector2(position)
         self.velocity = Vector2(randomizer(-5, 5), randomizer(-5, 5))
         self.acceleration = Vector2(acceleration)
@@ -22,6 +24,7 @@ class BallFighter():
         self.name = name
         self.mass = mass
         self.weapon = weapon
+        self.speedCap = speedCap
 
     def getName(self) -> str:
         '''
@@ -39,11 +42,11 @@ class BallFighter():
         if self.weapon != None:
             self.weapon.update(self.position)
 
-    def takeDamage(self, attacker):
+    def takeDamage(self, damage):
         '''
         takes damage from other ball, attacker is what has the damage attriubte, typically the weapon unles brawler
         '''
-        self.health -= attacker.damage
+        self.health -= damage
         
     def draw(self, screen):
         # Body as a circle
@@ -57,7 +60,7 @@ class BallFighter():
         
         # Health display
         font = pygame.font.SysFont(None, 36)
-        img = font.render(str(self.health), True, (220, 195, 200))
+        img = font.render(str(int(numpy.ceil(self.health))), True, (220, 195, 200))
         screen.blit(img, img.get_rect(center=(int(self.position.x), int(self.position.y))))
 
 
@@ -72,9 +75,8 @@ class DaggerFighter(BallFighter):
                          name="Dagger", mass=1, weapon = ballWeapons.Dagger(position))
 
 class Brawler(BallFighter):
-    def __init__(self, position, acceleration = Vector2(0,0), damage = 2):
+    def __init__(self, position, acceleration = Vector2(0,0)):
         super().__init__(position, acceleration, "assets/Brawler.png", radius=40, color=(86, 86, 73), 
-                         name="Brawler", mass=1.5)
-        self.damage = damage
+                         name="Brawler", mass=1.5, speedCap=10)
 
 # Can make more types here as wanted

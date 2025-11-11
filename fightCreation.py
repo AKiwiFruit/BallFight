@@ -1,9 +1,7 @@
 import pygame
-import random
 from pygame.math import Vector2
-import ballFighters
 import ballSimGame
-
+import ballFighters
 
 class CreateSettings():
     def __init__(self):
@@ -32,7 +30,7 @@ class CreateSettings():
     def processEvents(self):
         ''' 
          Process events
-         - Quit - Resize -
+         - Quit - Resize - Ball Selection - Start -
         '''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -71,7 +69,7 @@ class CreateSettings():
                           self.screenDim.y-100 <= mouse_pos.y <= self.screenDim.y-50):
                         
                         # get characters and start game with check to make sure characters arent null (shouldnt be necessary) also end creation mode
-                        character1, character2 = creation.getCharacters()
+                        character1, character2 = self.getCharacters()
                         if character1 is not None and character2 is not None:
                             game = ballSimGame.BallGame(character1, character2)
                             game.run()
@@ -156,6 +154,4 @@ class CreateSettings():
             # Cap the frame rate
             self.clock.tick(60)
 
-
-creation = CreateSettings()
-creation.run()
+CreateSettings().run()
