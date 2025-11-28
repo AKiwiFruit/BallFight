@@ -56,12 +56,12 @@ class gameEnd():
 
     def render(self):
         '''
-        Render creation menu visuals
+        Render game end visuals
         '''
         self.screen.fill((42, 40, 40))  # dark grey background
 
-        pygame.draw.rect(self.screen, (0, 0, 0), (100, 100, self.screenDim.x-200, self.screenDim.y-250), 5)
-        displayWinner = pygame.draw.rect(self.screen, (255, 255, 255), (105, 105, self.screenDim.x-210, self.screenDim.y-260), 0)
+        pygame.draw.rect(self.screen, (0, 0, 0), (200, 100, self.screenDim.x-400, self.screenDim.y-250), 5)
+        displayWinner = pygame.draw.rect(self.screen, (255, 255, 255), (205, 105, self.screenDim.x-410, self.screenDim.y-260), 0)
         self.screen.blit(pygame.transform.scale(self.image, displayWinner.size), displayWinner)
 
         # New Game Button
